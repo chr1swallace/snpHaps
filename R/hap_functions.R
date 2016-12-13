@@ -16,7 +16,7 @@ fix.alleles <- function(long,short) {
 ##' @return string with location of snphap executable
 ##' @author Chris Wallaced
 snphap.exec <- function() {
-    system.file("bin/snphap",package="snpStatsHaps")
+    system.file("bin/snphap",package="snpHaps")
 }
 
 ##' Generate haplotypes 
