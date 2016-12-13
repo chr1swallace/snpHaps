@@ -180,6 +180,7 @@ hapfreq <- function(dir,df,thr=0.001,maxi=NULL,haps.pattern="all-haps.out",
 ##' @param haps.pattern 
 ##' @param covars 
 ##' @param phenotype 
+##' @importFrom mice as.mira pool
 ##' @return 
 ##' @author Chris Wallace
 model.mi <- function(dir,df,family="binomial",thr=0.001,maxi=NULL,haps.pattern="haps.out2",
