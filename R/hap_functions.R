@@ -141,7 +141,7 @@ hapfreq <- function(dir,df,thr=0.001,maxi=NULL,haps.pattern="all-haps.out",
   if(!is.null(maxi) && length(files)>maxi)
     files <- files[1:maxi]
   message("reading first multiply imputed dataset from ",dir)
- # fits <- mclapply(seq_along(files), function(i) {
+ # fits <- lapply(seq_along(files), function(i) {
     cat(".")
     haps <- read.table(files[[1]],header=TRUE,sep="\t",as.is=TRUE)
     haps <- haps[,-c(2,3)]
@@ -219,7 +219,7 @@ model.mi <- function(dir,df,family="binomial",thr=0.001,maxi=NULL,haps.pattern="
     if(!is.null(maxi) && length(files)>maxi)
         files <- files[1:maxi]
     message("reading ",length(files)," multiply imputed datasets from ",dir)
-    fits <- mclapply(seq_along(files), function(i) {
+    fits <- lapply(seq_along(files), function(i) {
         cat(".")
         haps <- hap.read(files[[i]])
         haps <- haps[ haps$id %in% rownames(df), ]
@@ -298,7 +298,7 @@ diplotypes.mi <- function(dir,df,family="binomial",thr=0.001,maxi=NULL,haps.patt
   if(!is.null(maxi) && length(files)>maxi)
     files <- files[1:maxi]
   message("reading ",length(files)," multiply imputed datasets from ",dir)
-  fits <- mclapply(seq_along(files), function(i) {
+  fits <- lapply(seq_along(files), function(i) {
     cat(".")
     dips <- getdips(files[[i]])
     dips <- dips[ dips$id %in% rownames(df), ]
