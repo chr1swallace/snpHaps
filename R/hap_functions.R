@@ -51,10 +51,12 @@ genhaps <- function(data, slist=colnames(data), snps, samples,A1="allele.A",A2="
   if(any(nchar(a1)!=1) || any(nchar(a2)!=1)) { # can we fix it?
     w <- which(nchar(a1)>1 & nchar(a2)==1)
     if(length(w))
-      a1[w] <- fix.alleles(a1[w],a2[w])
+        for(i in w) 
+            a1[i] <- fix.alleles(a1[i],a2[i])[1]
     w <- which(nchar(a2)>1 & nchar(a1)==1)
     if(length(w))
-      a2[w] <- fix.alleles(a2[w],a1[w])
+        for(i in w) 
+            a2[i] <- fix.alleles(a2[i],a1[i])[1]
   }
   message("writing snphap input file ",f.in)
   write.snphap(data[,slist],
@@ -86,7 +88,17 @@ hap.read <- function(f) {
   d$hap <- apply(d[,-c(1,ncol(d)),drop=FALSE],1,paste,collapse="")
   d
 }
-
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title
+##' @param d
+##' @param q
+##' @param thr
+##' @param base
+##' @return
+##' @export
+##' @author Chris Wallace
 model <- function(d,q=NULL,thr=0.001,base=NULL) {
   tt <- tapply(d$Prob,d$hap,sum)
   tt <- 100*tt/sum(tt)
@@ -126,7 +138,20 @@ model <- function(d,q=NULL,thr=0.001,base=NULL) {
   ss <- ss[c(1,o),]
   invisible(list(result=ss,BIC=BIC(m)))                   
 }
-
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title
+##' @param dir
+##' @param df
+##' @param thr
+##' @param maxi
+##' @param haps.pattern
+##' @param covars
+##' @param phenotype
+##' @return 
+##' @export
+##' @author Chris Wallace
 hapfreq <- function(dir,df,thr=0.001,maxi=NULL,haps.pattern="all-haps.out",
                      covars="q", phenotype="y") {
   haps <- hap.read(file.path(dir,haps.pattern))
@@ -182,6 +207,7 @@ hapfreq <- function(dir,df,thr=0.001,maxi=NULL,haps.pattern="all-haps.out",
 ##' @param phenotype 
 ##' @importFrom mice as.mira pool
 ##' @return 
+##' @export
 ##' @author Chris Wallace
 model.mi <- function(dir,df,family="binomial",thr=0.001,maxi=NULL,haps.pattern="haps.out2",
                      covars="q", phenotype="y",base=NULL) {
@@ -334,13 +360,26 @@ diplotypes.mi <- function(dir,df,family="binomial",thr=0.001,maxi=NULL,haps.patt
 }
 
 library(reshape)
+##' .. content for \description{} (no empty lines) ..
+##'
+##' .. content for \details{} ..
+##' @title
+##' @param results
+##' @param hsnps
+##' @param hfreq
+##' @param thr
+##' @param y.max
+##' @param y.min
+##' @return 
+##' @export
+##' @author Chris Wallace
 plotter <- function(results,hsnps,hfreq,thr=0.01,y.max=NA,y.min=NA) {
 
   if(!is.na(thr)) {
     results <- subset(results,Fq>(thr*100))
     haps.found <- levels(results$hap)[ levels(results$hap) %in% results$hap ]
     results$hap <- factor(as.character(results$hap),levels=haps.found)
-    hfreq <- hfreq[,sub("hap","",levels(results$hap))]
+    hfreq <- hfreq[,sub("hap","",levels(results$hap)),drop=FALSE]
   }
   
   if(!is.na(y.max) & !is.na(y.min)) {
